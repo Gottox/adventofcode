@@ -7,12 +7,5 @@
 #
 
 
-cat input.txt | tr -cd "()" | sed 's/./\0\n/g' | sort | uniq -c | tr -d '()' | paste -s -d- | bc
-cat input.txt | sed 's/./\0\n/g' | \
-	while read l; do
-		case $l in 
-			\() i=`expr $i + 1`;;
-			\)) i=`expr $i - 1`;;
-		esac;
-		echo $i;
-	done | cat -n | grep -- -1 | head -n 1 | awk '{ print $1} '
+sed 's/(/1\n/g;s/)/-1\n/g' input.txt | paste -s -d+ | bc
+sed 's/(/++i\n/g;s/)/--i\n/g' input.txt | bc | nl | grep -m 1 -- -1 | awk '{print $1}'
